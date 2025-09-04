@@ -1,0 +1,12 @@
+services:
+  cloud-notes-sql-database:
+    image: postgres
+    container_name: cloud-notes
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cloud_notes
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
