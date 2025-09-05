@@ -18,4 +18,9 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         UserEntity savedUserEntity = springDataUserRepository.save(userEntity);
         return new User(savedUserEntity.getId(), savedUserEntity.getName(), savedUserEntity.getEmail());
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return springDataUserRepository.existsByEmail(email);
+    }
 }
