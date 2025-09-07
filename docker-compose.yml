@@ -1,12 +1,23 @@
 services:
-  cloud-notes-sql-database:
-    image: postgres
-    container_name: cloud-notes
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: cloud_notes
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
     ports:
-      - "5432:5432"
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - SERVICES=dynamodb
+      - AWS_ACCESS_KEY_ID=fakeAccessKey
+      - AWS_SECRET_ACCESS_KEY=fakeSecretKey
+      - DEFAULT_REGION=sa-east-1
+      - DEBUG=1
+      - HOSTNAME_EXTERNAL=localstack
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - "./docker/localstack/data:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./docker/script:/etc/localstack/init/ready.d"
+
+volumes:
+  cloud-notes-db-data:
+

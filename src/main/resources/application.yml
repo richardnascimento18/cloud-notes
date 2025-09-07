@@ -1,13 +1,8 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/cloud_notes
-    username: postgres
-    password: postgres
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+  aws:
+    dynamodb:
+      endpoint: ${DYNAMODB_ENDPOINT:http://localhost:4566}
+      region: ${AWS_REGION:us-east-1}
+      access-key: ${AWS_ACCESS_KEY_ID:fakeAccessKey}
+      secret-key: ${AWS_SECRET_ACCESS_KEY:fakeSecretKey}
+      table-name: ${DYNAMO_USERS_TABLE:tb_users}

@@ -78,7 +78,7 @@ docker-compose up -d
 ```bash
 curl -X POST http://localhost:8080/users \
   -H "Content-Type: application/json" \
-  -d '{"name": "Alice", "email": "alice@example.com"}'
+  -d '{"userName": "Alice", "email": "alice@example.com"}'
 ```
 
 ---

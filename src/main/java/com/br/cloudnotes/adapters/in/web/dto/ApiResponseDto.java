@@ -17,7 +17,6 @@ public class ApiResponseDto<T> {
         this._links = links;
     }
 
-    // getters
     public int getStatus() { return status; }
     public String getApiVersion() { return apiVersion; }
     public Instant getTimestamp() { return timestamp; }

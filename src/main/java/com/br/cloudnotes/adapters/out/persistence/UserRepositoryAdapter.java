@@ -6,21 +6,21 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRepositoryAdapter implements UserRepositoryPort {
-    private final SpringDataUserRepository springDataUserRepository;
+    private final DynamoDbUserRepository dynamoDbUserRepository;
 
-    public UserRepositoryAdapter(SpringDataUserRepository springDataUserRepository) {
-        this.springDataUserRepository = springDataUserRepository;
+    public UserRepositoryAdapter(DynamoDbUserRepository dynamoDbUserRepository) {
+        this.dynamoDbUserRepository = dynamoDbUserRepository;
     }
 
     @Override
     public User save(User user) {
         UserEntity userEntity = new UserEntity(user.getId(), user.getName(), user.getEmail());
-        UserEntity savedUserEntity = springDataUserRepository.save(userEntity);
-        return new User(savedUserEntity.getId(), savedUserEntity.getName(), savedUserEntity.getEmail());
+        UserEntity savedUserEntity = dynamoDbUserRepository.save(userEntity);
+        return new User(savedUserEntity.getUserId(), savedUserEntity.getUserName(), savedUserEntity.getUserEmail());
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        return springDataUserRepository.existsByEmail(email);
+        return dynamoDbUserRepository.existsByEmail(email);
     }
 }
