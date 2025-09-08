@@ -5,6 +5,8 @@ import com.br.cloudnotes.core.model.User;
 import com.br.cloudnotes.core.ports.in.UserUseCases;
 import com.br.cloudnotes.core.ports.out.UserRepositoryPort;
 
+import java.util.List;
+
 public class UserService implements UserUseCases {
     private final UserRepositoryPort userRepositoryPort;
 
@@ -18,5 +20,10 @@ public class UserService implements UserUseCases {
             throw new UserAlreadyExistsException(email);
         }
         return userRepositoryPort.save(new User(null, name, email));
+    }
+
+    @Override
+    public List<User> getAllUsers(int page) {
+        return userRepositoryPort.getAllUsers(page);
     }
 }
