@@ -23,7 +23,7 @@ public class UserService implements UserUseCases {
     }
 
     @Override
-    public List<User> getAllUsers(int page) {
+    public List<User> getAllUsers(int page) throws Exception {
         return userRepositoryPort.getAllUsers(page);
     }
 }

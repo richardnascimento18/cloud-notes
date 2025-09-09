@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface UserUseCases {
     User createUser(String name, String email);
-    List<User> getAllUsers(int page);
+    List<User> getAllUsers(int page) throws Exception;
 }

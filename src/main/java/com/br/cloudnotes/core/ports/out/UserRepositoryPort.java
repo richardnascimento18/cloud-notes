@@ -7,5 +7,5 @@ import java.util.List;
 public interface UserRepositoryPort {
     User save(User user);
     boolean existsByEmail(String email);
-    List<User> getAllUsers(int page);
+    List<User> getAllUsers(int page) throws Exception;
 }

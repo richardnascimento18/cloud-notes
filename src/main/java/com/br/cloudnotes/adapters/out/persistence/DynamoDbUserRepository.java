@@ -1,5 +1,6 @@
 package com.br.cloudnotes.adapters.out.persistence;
 
+import com.br.cloudnotes.core.domain.exceptions.PageNotFoundException;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -37,11 +38,11 @@ public class DynamoDbUserRepository {
                 .anyMatch(u -> u.getUserEmail().equals(email));
     }
 
-    public List<UserEntity> getAllUsers(int page) {
+    public List<UserEntity> getAllUsers(int page) throws Exception {
         int limit = 15;
 
         if (page < 1) {
-            return List.of(); // invalid page numbers return empty
+            throw new Exception("INVALID_NUMBER_OF_PAGES"); // invalid page numbers return empty
         }
 
         Map<String, AttributeValue> exclusiveStartKey = null;
@@ -57,7 +58,7 @@ public class DynamoDbUserRepository {
 
             if (!iterator.hasNext()) {
                 // no more pages
-                return List.of();
+                throw new PageNotFoundException(page);
             }
 
             Page<UserEntity> scannedPage = iterator.next();
@@ -65,7 +66,7 @@ public class DynamoDbUserRepository {
 
             if (exclusiveStartKey == null) {
                 // reached the last page before requested
-                return List.of();
+                throw new PageNotFoundException(page);
             }
         }
 
@@ -78,7 +79,7 @@ public class DynamoDbUserRepository {
         Iterator<Page<UserEntity>> iterator = userTable.scan(pageRequest).iterator();
 
         if (!iterator.hasNext()) {
-            return List.of();
+            throw new PageNotFoundException(page);
         }
 
         return iterator.next().items().stream().toList();

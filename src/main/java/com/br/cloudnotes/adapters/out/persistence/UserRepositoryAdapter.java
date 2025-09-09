@@ -27,7 +27,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public List<User> getAllUsers(int page) {
+    public List<User> getAllUsers(int page) throws Exception {
         return dynamoDbUserRepository.getAllUsers(page).stream()
                 .map(u -> new User(u.getUserId(), u.getUserName(), u.getUserEmail()))
                 .toList();

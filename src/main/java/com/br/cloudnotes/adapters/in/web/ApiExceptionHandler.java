@@ -2,6 +2,7 @@ package com.br.cloudnotes.adapters.in.web;
 
 import com.br.cloudnotes.adapters.in.web.dto.ApiResponseDto;
 import com.br.cloudnotes.adapters.in.web.dto.ErrorBodyDto;
+import com.br.cloudnotes.core.domain.exceptions.PageNotFoundException;
 import com.br.cloudnotes.core.domain.exceptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,16 @@ public class ApiExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(PageNotFoundException.class)
+    public ResponseEntity<ApiResponseDto<Object>> handlePageNotFound(PageNotFoundException ex) {
+        ApiResponseDto<Object> response = new ApiResponseDto<>(
+                HttpStatus.NOT_FOUND.value(),
+                Map.of("error", ex.getMessage(), "code", "#404"),
+                Map.of()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(Exception.class)

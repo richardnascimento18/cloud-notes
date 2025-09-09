@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ApiResponseDto<List<UserResponseDto>> getAllUsers(@RequestParam() int page) {
+    public ApiResponseDto<List<UserResponseDto>> getAllUsers(@RequestParam() int page) throws Exception {
         List<User> users = userService.getAllUsers(page);
         List<UserResponseDto> dtos = users.stream().map(u -> new UserResponseDto(u.getId(), u.getName(), u.getEmail())).toList();
 
