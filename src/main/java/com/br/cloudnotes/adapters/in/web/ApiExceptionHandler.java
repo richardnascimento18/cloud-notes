@@ -4,6 +4,7 @@ import com.br.cloudnotes.adapters.in.web.dto.ApiResponseDto;
 import com.br.cloudnotes.adapters.in.web.dto.ErrorBodyDto;
 import com.br.cloudnotes.core.domain.exceptions.PageNotFoundException;
 import com.br.cloudnotes.core.domain.exceptions.UserAlreadyExistsException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +15,8 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+    @Value("${app.version}")
+    private String appVersion;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponseDto<ErrorBodyDto>> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -26,6 +29,7 @@ public class ApiExceptionHandler {
 
         ApiResponseDto<ErrorBodyDto> response = new ApiResponseDto<>(
                 HttpStatus.BAD_REQUEST.value(),
+                appVersion,
                 errorBodyDto,
                 Map.of()
         );
@@ -37,6 +41,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiResponseDto<Object>> handleUserAlreadyExists(UserAlreadyExistsException ex) {
         ApiResponseDto<Object> response = new ApiResponseDto<>(
                 HttpStatus.CONFLICT.value(),
+                appVersion,
                 Map.of("error", ex.getMessage(), "code", "#409"),
                 Map.of()
         );
@@ -48,6 +53,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiResponseDto<Object>> handlePageNotFound(PageNotFoundException ex) {
         ApiResponseDto<Object> response = new ApiResponseDto<>(
                 HttpStatus.NOT_FOUND.value(),
+                appVersion,
                 Map.of("error", ex.getMessage(), "code", "#404"),
                 Map.of()
         );
@@ -58,6 +64,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiResponseDto<Object>> handleGeneric(Exception ex) {
         ApiResponseDto<Object> response = new ApiResponseDto<>(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                appVersion,
                 Map.of("error", "Unexpected error", "details", ex.getMessage()),
                 Map.of()
         );

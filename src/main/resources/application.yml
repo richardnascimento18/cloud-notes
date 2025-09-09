@@ -6,3 +6,6 @@ spring:
       access-key: ${AWS_ACCESS_KEY_ID:fakeAccessKey}
       secret-key: ${AWS_SECRET_ACCESS_KEY:fakeSecretKey}
       table-name: ${DYNAMO_USERS_TABLE:tb_users}
+
+app:
+  version: 1.0.3

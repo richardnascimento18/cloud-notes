@@ -7,6 +7,7 @@ import com.br.cloudnotes.core.model.User;
 import com.br.cloudnotes.core.ports.in.UserUseCases;
 
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -17,6 +18,9 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
     private final UserUseCases userService;
+
+    @Value("${app.version}")
+    private String appVersion;
 
     public UserController(UserUseCases userService) {
         this.userService = userService;
@@ -32,7 +36,7 @@ public class UserController {
         links.put("current", new ApiResponseDto.Link("POST", "http://localhost:8080/users", "create-user"));
         links.put("next", new ApiResponseDto.Link("GET", "http://localhost:8080/users/" + created.getId(), "get-user"));
 
-        return new ApiResponseDto<>(201, dto, links);
+        return new ApiResponseDto<>(201, appVersion, dto, links);
     }
 
     @GetMapping
@@ -48,7 +52,7 @@ public class UserController {
         links.put("current", new ApiResponseDto.Link("POST", "http://localhost:8080/users/" + page, "page-" + page));
         links.put("next", new ApiResponseDto.Link("GET", "http://localhost:8080/users/" + next, next));
 
-        return new ApiResponseDto<>(201, dtos, links);
+        return new ApiResponseDto<>(201, appVersion, dtos, links);
     }
 
 }
