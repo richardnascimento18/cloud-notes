@@ -26,4 +26,9 @@ public class UserService implements UserUseCases {
     public List<User> getAllUsers(int page) throws Exception {
         return userRepositoryPort.getAllUsers(page);
     }
+
+    @Override
+    public User getUserById(String id, String email) throws Exception {
+        return userRepositoryPort.getUserById(id, email);
+    }
 }

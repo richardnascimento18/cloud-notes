@@ -1,6 +1,6 @@
 package com.br.cloudnotes.adapters.in.web;
 
-import com.br.cloudnotes.adapters.in.web.dto.UserRequestDto;
+import com.br.cloudnotes.adapters.in.web.dto.request.UserRequestDto;
 import com.br.cloudnotes.config.TestConfig;
 import com.br.cloudnotes.core.model.User;
 import com.br.cloudnotes.core.ports.in.UserUseCases;

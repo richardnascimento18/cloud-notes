@@ -32,4 +32,10 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
                 .map(u -> new User(u.getUserId(), u.getUserName(), u.getUserEmail()))
                 .toList();
     }
+
+    @Override
+    public User getUserById(String id, String email) {
+        UserEntity userEntity = dynamoDbUserRepository.getUserById(id, email);
+        return new User(userEntity.getUserId(), userEntity.getUserName(), userEntity.getUserEmail());
+    }
 }

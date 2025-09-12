@@ -1,8 +1,8 @@
 package com.br.cloudnotes.adapters.in.web;
 
-import com.br.cloudnotes.adapters.in.web.dto.ApiResponseDto;
-import com.br.cloudnotes.adapters.in.web.dto.UserRequestDto;
-import com.br.cloudnotes.adapters.in.web.dto.UserResponseDto;
+import com.br.cloudnotes.adapters.in.web.dto.response.ApiResponseDto;
+import com.br.cloudnotes.adapters.in.web.dto.request.UserRequestDto;
+import com.br.cloudnotes.adapters.in.web.dto.response.UserResponseDto;
 import com.br.cloudnotes.core.model.User;
 import com.br.cloudnotes.core.ports.in.UserUseCases;
 
@@ -53,6 +53,19 @@ public class UserController {
         links.put("next", new ApiResponseDto.Link("GET", "http://localhost:8080/users/" + next, next));
 
         return new ApiResponseDto<>(201, appVersion, dtos, links);
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponseDto<UserResponseDto> getUserById(@PathVariable("id") String id, @RequestParam() String email) throws Exception {
+        User user = userService.getUserById(id, email);
+        UserResponseDto dto = new UserResponseDto(user.getId(), user.getName(), user.getEmail());
+
+        Map<String, ApiResponseDto.Link> links = new LinkedHashMap<>();
+        links.put("previous", new ApiResponseDto.Link("GET", "http://localhost:8080/users/{page-number}", "all-users"));
+        links.put("current", new ApiResponseDto.Link("GET", "http://localhost:8080/users/" + id + "?email=" + email, "get-user"));
+        links.put("next", new ApiResponseDto.Link("POST", "http://localhost:8080/users/", "create-user"));
+
+        return new ApiResponseDto<>(201, appVersion, dto, links);
     }
 
 }

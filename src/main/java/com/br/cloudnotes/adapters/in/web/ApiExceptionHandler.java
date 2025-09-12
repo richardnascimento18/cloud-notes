@@ -1,6 +1,6 @@
 package com.br.cloudnotes.adapters.in.web;
 
-import com.br.cloudnotes.adapters.in.web.dto.ApiResponseDto;
+import com.br.cloudnotes.adapters.in.web.dto.response.ApiResponseDto;
 import com.br.cloudnotes.adapters.in.web.dto.ErrorBodyDto;
 import com.br.cloudnotes.core.domain.exceptions.PageNotFoundException;
 import com.br.cloudnotes.core.domain.exceptions.UserAlreadyExistsException;

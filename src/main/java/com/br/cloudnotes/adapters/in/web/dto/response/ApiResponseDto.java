@@ -1,4 +1,4 @@
-package com.br.cloudnotes.adapters.in.web.dto;
+package com.br.cloudnotes.adapters.in.web.dto.response;
 
 import java.time.Instant;
 import java.util.Map;

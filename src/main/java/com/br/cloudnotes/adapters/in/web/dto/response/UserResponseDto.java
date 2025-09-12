@@ -1,11 +1,11 @@
-package com.br.cloudnotes.adapters.in.web.dto;
+package com.br.cloudnotes.adapters.in.web.dto.response;
 
 import java.util.UUID;
 
 public class UserResponseDto {
-    private UUID id;
-    private String name;
-    private String email;
+    private final UUID id;
+    private final String name;
+    private final String email;
 
     public UserResponseDto(UUID id, String name, String email) {
         this.id = id;
@@ -13,7 +13,6 @@ public class UserResponseDto {
         this.email = email;
     }
 
-    // getters only (immutable response)
     public UUID getId() { return id; }
     public String getName() { return name; }
     public String getEmail() { return email; }

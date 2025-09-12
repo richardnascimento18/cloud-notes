@@ -8,4 +8,5 @@ public interface UserRepositoryPort {
     User save(User user);
     boolean existsByEmail(String email);
     List<User> getAllUsers(int page) throws Exception;
+    User getUserById(String id, String email) throws Exception;
 }

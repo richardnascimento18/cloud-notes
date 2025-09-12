@@ -4,6 +4,7 @@ import com.br.cloudnotes.core.domain.exceptions.PageNotFoundException;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
@@ -83,5 +84,9 @@ public class DynamoDbUserRepository {
         }
 
         return iterator.next().items().stream().toList();
+    }
+
+    public UserEntity getUserById(String id, String email) {
+        return userTable.getItem(Key.builder().partitionValue(id).sortValue(email).build());
     }
 }
