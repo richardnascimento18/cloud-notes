@@ -43,7 +43,7 @@ public class DynamoDbUserRepository {
         int limit = 15;
 
         if (page < 1) {
-            throw new Exception("INVALID_NUMBER_OF_PAGES"); // invalid page numbers return empty
+            throw new Exception("INVALID_NUMBER_OF_PAGES");
         }
 
         Map<String, AttributeValue> exclusiveStartKey = null;
