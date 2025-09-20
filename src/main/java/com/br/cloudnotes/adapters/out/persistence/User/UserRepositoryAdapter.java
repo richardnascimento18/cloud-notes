@@ -1,4 +1,4 @@
-package com.br.cloudnotes.adapters.out.persistence;
+package com.br.cloudnotes.adapters.out.persistence.User;
 
 import com.br.cloudnotes.core.model.User;
 import com.br.cloudnotes.core.ports.out.UserRepositoryPort;

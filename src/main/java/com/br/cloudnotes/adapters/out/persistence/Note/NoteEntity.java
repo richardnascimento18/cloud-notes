@@ -1,4 +1,4 @@
-package com.br.cloudnotes.adapters.out.persistence;
+package com.br.cloudnotes.adapters.out.persistence.Note;
 
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;

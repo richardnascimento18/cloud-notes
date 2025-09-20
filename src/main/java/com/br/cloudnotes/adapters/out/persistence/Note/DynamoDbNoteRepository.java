@@ -1,5 +1,6 @@
-package com.br.cloudnotes.adapters.out.persistence;
+package com.br.cloudnotes.adapters.out.persistence.Note;
 
+import com.br.cloudnotes.adapters.out.persistence.User.UserEntity;
 import com.br.cloudnotes.core.domain.exceptions.PageNotFoundException;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -7,6 +8,8 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
@@ -16,30 +19,22 @@ import java.util.Map;
 import java.util.UUID;
 
 @Repository
-public class DynamoDbUserRepository {
+public class DynamoDbNoteRepository {
+    private final DynamoDbTable<NoteEntity> noteTable;
 
-    private final DynamoDbTable<UserEntity> userTable;
-
-    public DynamoDbUserRepository(DynamoDbEnhancedClient enhancedClient) {
-        this.userTable = enhancedClient.table("tb_users", TableSchema.fromBean(UserEntity.class));
+    public DynamoDbNoteRepository(DynamoDbEnhancedClient enhancedClient) {
+        this.noteTable = enhancedClient.table("tb_notes", TableSchema.fromBean(NoteEntity.class));
     }
 
-    public UserEntity save(UserEntity user) {
-        if (user.getUserId() == null) {
-            user.setUserId(UUID.randomUUID());
+    public NoteEntity save(NoteEntity note) {
+        if (note.getId() == null) {
+            note.setId(UUID.randomUUID());
         }
-        userTable.putItem(user);
-        return user;
+        noteTable.putItem(note);
+        return note;
     }
 
-    public boolean existsByEmail(String email) {
-        return userTable.scan()
-                .items()
-                .stream()
-                .anyMatch(u -> u.getUserEmail().equals(email));
-    }
-
-    public List<UserEntity> getAllUsers(int page) throws Exception {
+    public List<NoteEntity> getAllNotes(String userId, int page) throws Exception {
         int limit = 15;
 
         if (page < 1) {
@@ -50,34 +45,38 @@ public class DynamoDbUserRepository {
 
         // Iterate until we reach the desired page
         for (int currentPage = 1; currentPage < page; currentPage++) {
-            ScanEnhancedRequest request = ScanEnhancedRequest.builder()
+            QueryEnhancedRequest request = QueryEnhancedRequest.builder()
+                    .queryConditional(
+                            QueryConditional.keyEqualTo(Key.builder().partitionValue(userId).build())
+                    )
                     .limit(limit)
                     .exclusiveStartKey(exclusiveStartKey)
                     .build();
 
-            Iterator<Page<UserEntity>> iterator = userTable.scan(request).iterator();
+            Iterator<Page<NoteEntity>> iterator = noteTable.query(request).iterator();
 
             if (!iterator.hasNext()) {
-                // no more pages
                 throw new PageNotFoundException(page);
             }
 
-            Page<UserEntity> scannedPage = iterator.next();
-            exclusiveStartKey = scannedPage.lastEvaluatedKey();
+            Page<NoteEntity> queriedPage = iterator.next();
+            exclusiveStartKey = queriedPage.lastEvaluatedKey();
 
             if (exclusiveStartKey == null) {
-                // reached the last page before requested
                 throw new PageNotFoundException(page);
             }
         }
 
-        // Now fetch the actual requested page
-        ScanEnhancedRequest pageRequest = ScanEnhancedRequest.builder()
+        // Now fetch the requested page
+        QueryEnhancedRequest pageRequest = QueryEnhancedRequest.builder()
+                .queryConditional(
+                        QueryConditional.keyEqualTo(Key.builder().partitionValue(userId).build())
+                )
                 .limit(limit)
                 .exclusiveStartKey(exclusiveStartKey)
                 .build();
 
-        Iterator<Page<UserEntity>> iterator = userTable.scan(pageRequest).iterator();
+        Iterator<Page<NoteEntity>> iterator = noteTable.query(pageRequest).iterator();
 
         if (!iterator.hasNext()) {
             throw new PageNotFoundException(page);
@@ -86,7 +85,4 @@ public class DynamoDbUserRepository {
         return iterator.next().items().stream().toList();
     }
 
-    public UserEntity getUserById(String id, String email) {
-        return userTable.getItem(Key.builder().partitionValue(id).sortValue(email).build());
-    }
 }

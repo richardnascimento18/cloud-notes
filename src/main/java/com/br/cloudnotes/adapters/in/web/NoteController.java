@@ -7,12 +7,10 @@ import com.br.cloudnotes.core.model.Note;
 import com.br.cloudnotes.core.ports.in.NoteUseCases;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,5 +36,21 @@ public class NoteController {
         links.put("next", new ApiResponseDto.Link("GET", "http://localhost:8080/notes/" + dto.getId(), "get-note"));
 
         return new ApiResponseDto<>(201, appVersion, dto, links);
+    }
+
+    @GetMapping("/{userId}/{page}")
+    public ApiResponseDto<List<NoteResponseDto>> getAllNotes(@PathVariable("userId") String userId, @PathVariable("page") int page) throws Exception {
+        List<Note> notes = noteService.getAllNotes(userId, page);
+        List<NoteResponseDto> dtos = notes.stream().map(n -> new NoteResponseDto(n.getId(), n.getUserId(), n.getTitle(), n.getContent())).toList();
+
+        int previous = page - 1;
+        int next = page + 1;
+
+        Map<String, ApiResponseDto.Link> links = new LinkedHashMap<>();
+        links.put("previous", new ApiResponseDto.Link("GET", "http://localhost:8080/users/" + previous, "page-" + previous));
+        links.put("current", new ApiResponseDto.Link("POST", "http://localhost:8080/users/" + page, "page-" + page));
+        links.put("next", new ApiResponseDto.Link("GET", "http://localhost:8080/users/" + next, "page-" + next));
+
+        return new ApiResponseDto<>(201, appVersion, dtos, links);
     }
 }
