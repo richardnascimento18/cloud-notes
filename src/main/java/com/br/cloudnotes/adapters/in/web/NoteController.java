@@ -38,6 +38,7 @@ public class NoteController {
         return new ApiResponseDto<>(201, appVersion, dto, links);
     }
 
+    // Get all notes for a user
     @GetMapping("/{userId}/{page}")
     public ApiResponseDto<List<NoteResponseDto>> getAllNotes(@PathVariable("userId") String userId, @PathVariable("page") int page) throws Exception {
         List<Note> notes = noteService.getAllNotes(userId, page);
