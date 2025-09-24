@@ -8,4 +8,4 @@ spring:
       table-name: ${DYNAMO_USERS_TABLE:tb_users}
 
 app:
-  version: 02.01.00
+  version: 00.04.00

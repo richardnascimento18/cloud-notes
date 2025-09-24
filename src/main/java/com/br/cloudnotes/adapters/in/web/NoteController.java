@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/notes")
+@RequestMapping("/api/v1/notes")
 public class NoteController {
     private final NoteUseCases noteService;
 
